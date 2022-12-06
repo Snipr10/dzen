@@ -55,7 +55,7 @@ if __name__ == '__main__':
         try:
             user_models.append(
                 DzenUser.objects.create(
-                    id=(int(source['id'])),
+                    id=abs(int(source['id'])),
                     screen_name=source['publisher_id'],
                     followers=source['subscribers'],
                     # sphinx_id=get_sphinx_id(source['feed_share_link']),
@@ -70,7 +70,7 @@ if __name__ == '__main__':
         try:
             user_description_models.append(
                 UserDescription.objects.create(
-                    id=(int(source['id'])),
+                    id=abs(int(source['id'])),
                     description=source['description'],
                     url=source['feed_share_link']
 
