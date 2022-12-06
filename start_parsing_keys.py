@@ -67,7 +67,7 @@ if __name__ == '__main__':
             user_description_models.append(
                 UserDescription(
                     id=abs(int(source['id'])),
-                    description=source['description'],
+                    description=source.get('description', ""),
                     url=source['feed_share_link']
 
                 )
