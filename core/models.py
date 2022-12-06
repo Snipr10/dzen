@@ -41,12 +41,10 @@ class Post(models.Model):
     owner_id = models.IntegerField()
     found_date = models.DateTimeField(default=now)
     likes = models.IntegerField(default=0)
-    last_parsing = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
+    last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
     taken = models.IntegerField(default=0)
-    sphinx_id = models.CharField(max_length=4096)
     comments = models.IntegerField(default=0)
     content_hash = models.CharField(max_length=4096, default=None)
-    last_modified = models.DateTimeField(default=now)
     url = models.CharField(max_length=4096)
 
     class Meta:

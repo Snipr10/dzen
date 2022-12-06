@@ -85,10 +85,9 @@ if __name__ == '__main__':
                         created_date=dateparser.parse(l['creation_time']),
                         owner_id=source['id'],
                         likes=l['socialInfo']['likesCount'],
-                        last_parsing=update_time_timezone(timezone.localtime()),
+                        last_modified=update_time_timezone(timezone.localtime()),
                         comments=l['socialInfo']['commentCount'],
                         url=l['share_link'],
-                        sphinx_id=get_sphinx_id(l['share_link']),
                         content_hash=get_md5(l['text'])
                     )
                 )
@@ -113,7 +112,6 @@ if __name__ == '__main__':
                         likes=l['socialInfo']['likesCount'],
                         comments=l['socialInfo']['commentCount'],
                         url=l['share_link'],
-                        sphinx_id=get_sphinx_id(l['share_link'])
                     )
                 )
             except Exception as e:
