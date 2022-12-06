@@ -63,21 +63,21 @@ if __name__ == '__main__':
                     name=source['title'],
                     avatar=source['logo'],
                     # is_verified=source['is_verified'],
-                    # url=source['feed_share_link']
                 )
             )
         except Exception as e:
-            pass
-            # print(e)
-        # try:
-        #     user_description_models.append(
-        #         UserDescription.objects.create(
-        #             id=abs(source['id']),
-        #             description=source['description'],
-        #         )
-        #     )
-        # except Exception as e:
-        #     print(e)
+            print(e)
+        try:
+            user_description_models.append(
+                UserDescription.objects.create(
+                    id=abs(source['id']),
+                    description=source['description'],
+                    url=source['feed_share_link']
+
+                )
+            )
+        except Exception as e:
+            print(e)
         #
         # if "/b/" in l['share_link']:
         #     try:

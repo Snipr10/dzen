@@ -21,7 +21,6 @@ class DzenUser(models.Model):
     #
     # sphinx_id = models.CharField(max_length=4096)
     # # is_verified = models.BooleanField(default=0)
-    # url = models.CharField(max_length=4096)
 
     class Meta:
         db_table = 'prsr_parser_dzen_user'
@@ -30,7 +29,7 @@ class DzenUser(models.Model):
 class UserDescription(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
     description = models.CharField(max_length=4096)
-    last_modified = models.DateTimeField(default=now)
+    url = models.CharField(max_length=4096)
 
     class Meta:
         db_table = 'prsr_parser_dzen_user_description'
