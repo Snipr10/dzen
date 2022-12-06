@@ -53,7 +53,7 @@ class Post(models.Model):
 
 class PostContent(models.Model):
     id = models.IntegerField(primary_key=True)
-    text = models.CharField(max_length=10000)
+    content = models.CharField(max_length=10000)
     url = models.CharField(max_length=4096)
 
     class Meta:

@@ -117,7 +117,7 @@ if __name__ == '__main__':
             post_content_models.append(
                 PostContent.objects.create(
                     id=abs(int(l['id'])),
-                    text=l['text'],
+                    content=l['text'],
                     url=l['share_link']
                 )
             )
