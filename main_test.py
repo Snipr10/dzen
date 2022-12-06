@@ -49,7 +49,6 @@ if __name__ == '__main__':
     user_description_models = []
     post_models = []
     post_content_models = []
-    print(f"list_resp {list_resp}")
     for l in list_resp:
         source = l['source']
 
