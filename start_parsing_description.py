@@ -49,11 +49,11 @@ if __name__ == '__main__':
     post_content_models = []
     for p in Post.objects.filter(last_modified__lte=datetime.date(2000, 1, 1)):
         try:
-            text, images = get_post_info(requests.session(), PostContent.objects.get(id=p.id).url)
-            p.content_hash = get_md5(text)
+            res = get_post_info(requests.session(), PostContent.objects.get(id=p.id).url)
+            p.content_hash = get_md5(res.get('text'))
             p.last_modified = timezone.now()
             post_models.append(p)
-            post_content_models.append(PostContent(id=p.id, content=text))
+            post_content_models.append(PostContent(id=p.id, content=res.get('text')))
         except Exception as e:
             print(e)
     try:
