@@ -315,7 +315,14 @@ def get_post_info(session, url):
     }
     res = session.get(url, headers=headers)
     text = ''
-    if "/video/" not in url:
+
+    if "/b/" in url:
+        try:
+            soup = BeautifulSoup(res.text, "html.parser")
+            text = soup.find('div', {'class': 'ui-lib-brief-content-page__text'}).text
+        except Exception:
+            pass
+    elif "/video/" not in url:
         soup = BeautifulSoup(res.text, "html.parser")
 
         allNews = soup.find('div', {'itemprop': 'articleBody'})
@@ -330,6 +337,7 @@ def get_post_info(session, url):
                     pass
         except Exception:
             print(url)
+
     else:
         try:
             soup = BeautifulSoup(res.text.encode("iso-8859-1").decode(), "html.parser")
