@@ -42,7 +42,7 @@ class Post(models.Model):
     likes = models.IntegerField(default=0)
     comments = models.IntegerField(default=0)
     trust = models.IntegerField(default=0)
-    content_hash = models.CharField(max_length=4096, default=None)
+    content_hash = models.CharField(max_length=4096, default="")
     last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
     found_date = models.DateTimeField(default=now)
 

@@ -52,6 +52,12 @@ if __name__ == '__main__':
     for l in list_resp:
         source = l['source']
 
+    for l in list_resp:
+        source = l['source']
+        try:
+            l.get['socialInfo']['likesCount']
+        except Exception:
+            pass
         try:
             user_models.append(
                 DzenUser.objects.create(
@@ -86,9 +92,9 @@ if __name__ == '__main__':
                         id=abs(int(l['id'])),
                         created_date=dateparser.parse(l['creation_time']),
                         owner_id=abs(int(source['id'])),
-                        likes=l['socialInfo']['likesCount'],
                         last_modified=update_time_timezone(timezone.localtime()),
-                        comments=l['socialInfo']['commentCount'],
+                        likes=l.get('socialInfo', {}).get('likesCount', 0),
+                        comments=l.get('socialInfo', {}).get('commentCount', 0),
                         content_hash=get_md5(l['text'])
                     )
                 )
@@ -111,7 +117,7 @@ if __name__ == '__main__':
                         created_date=dateparser.parse(l['creation_time']),
                         owner_id=source['id'],
                         likes=l.get('socialInfo', {}).get('likesCount', 0),
-                        comments=l['socialInfo']['commentCount'],
+                        comments=l.get('socialInfo', {}).get('commentCount', 0),
                     )
                 )
             except Exception as e:
