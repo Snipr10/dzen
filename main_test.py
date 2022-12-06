@@ -110,7 +110,7 @@ if __name__ == '__main__':
                         id=l['id'],
                         created_date=dateparser.parse(l['creation_time']),
                         owner_id=source['id'],
-                        likes=l['socialInfo']['likesCount'],
+                        likes=l.get('socialInfo', {}).get('likesCount', 0),
                         comments=l['socialInfo']['commentCount'],
                     )
                 )
