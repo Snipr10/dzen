@@ -352,7 +352,7 @@ if __name__ == '__main__':
 
 
     # get_by_key(requests.session(), "auto")
-    get_post_info(requests.session(), "https://dzen.ru/b/Y4XHsgYfyCkXRHna")
+    get_post_info(requests.session(), "https://dzen.ru/b/Y4gzsXztl03a6RBZ")
     list_resp = searchy_key(requests.session(), "auto")
     result = []
     for l in list_resp:

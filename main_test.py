@@ -91,10 +91,10 @@ if __name__ == '__main__':
                         id=abs(int(l['id'])),
                         created_date=dateparser.parse(l['creation_time']),
                         owner_id=abs(int(source['id'])),
-                        last_modified=update_time_timezone(timezone.localtime()),
+                        # last_modified=update_time_timezone(timezone.localtime()),
                         likes=l.get('socialInfo', {}).get('likesCount', 0),
                         comments=l.get('socialInfo', {}).get('commentCount', 0),
-                        content_hash=get_md5(l['text'])
+                        # content_hash=get_md5(l['text'])
                     )
                 )
             except Exception as e:
@@ -106,7 +106,7 @@ if __name__ == '__main__':
                     Post.objects.create(
                         id=abs(int(l['id'])),
                         created_date=dateparser.parse(l['creation_time']),
-                        owner_id=source['id'],
+                        owner_id=abs(int(source['id'])),
                         likes=l.get('socialInfo', {}).get('likesCount', 0),
                         comments=l.get('socialInfo', {}).get('commentCount', 0),
                     )
