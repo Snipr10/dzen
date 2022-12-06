@@ -78,23 +78,23 @@ if __name__ == '__main__':
             )
         except Exception as e:
             print(f"{e}  {source['id']}")
-        #
-        # if "/b/" in l['share_link']:
-        #     try:
-        #         post_models.append(
-        #             Post.objects.create(
-        #                 id=l['id'],
-        #                 created_date=dateparser.parse(l['creation_time']),
-        #                 owner_id=source['id'],
-        #                 likes=l['socialInfo']['likesCount'],
-        #                 last_modified=update_time_timezone(timezone.localtime()),
-        #                 comments=l['socialInfo']['commentCount'],
-        #                 url=l['share_link'],
-        #                 content_hash=get_md5(l['text'])
-        #             )
-        #         )
-        #     except Exception as e:
-        #         print(e)
+
+        if "/b/" in l['share_link']:
+            try:
+                post_models.append(
+                    Post.objects.create(
+                        id=abs(int(l['id'])),
+                        created_date=dateparser.parse(l['creation_time']),
+                        owner_id=abs(int(source['id'])),
+                        likes=l['socialInfo']['likesCount'],
+                        last_modified=update_time_timezone(timezone.localtime()),
+                        comments=l['socialInfo']['commentCount'],
+                        url=l['share_link'],
+                        content_hash=get_md5(l['text'])
+                    )
+                )
+            except Exception as e:
+                print(e)
         #     try:
         #         post_content_models.append(
         #             PostContent.objects.create(

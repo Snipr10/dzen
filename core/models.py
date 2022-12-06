@@ -37,15 +37,15 @@ class UserDescription(models.Model):
 
 class Post(models.Model):
     id = models.IntegerField(primary_key=True)
-    created_date = models.DateField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
     owner_id = models.IntegerField()
-    found_date = models.DateTimeField(default=now)
+    created_date = models.DateField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
     likes = models.IntegerField(default=0)
-    last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
-    taken = models.IntegerField(default=0)
     comments = models.IntegerField(default=0)
+    trust = models.IntegerField(default=0)
     content_hash = models.CharField(max_length=4096, default=None)
-    url = models.CharField(max_length=4096)
+    last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
+    found_date = models.DateTimeField(default=now)
+
 
     class Meta:
         db_table = 'prsr_parser_dzen_post'
