@@ -52,10 +52,11 @@ if __name__ == '__main__':
     print(f"list_resp {list_resp}")
     for l in list_resp:
         source = l['source']
+
         try:
             user_models.append(
                 DzenUser.objects.create(
-                    id=source['id'],
+                    id=abs(source['id']),
                     screen_name=source['publisher_id'],
                     followers=source['subscribers'],
                     # sphinx_id=get_sphinx_id(source['feed_share_link']),
@@ -66,11 +67,12 @@ if __name__ == '__main__':
                 )
             )
         except Exception as e:
-            print(e)
+            pass
+            # print(e)
         # try:
         #     user_description_models.append(
         #         UserDescription.objects.create(
-        #             id=source['id'],
+        #             id=abs(source['id']),
         #             description=source['description'],
         #         )
         #     )
