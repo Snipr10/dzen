@@ -49,8 +49,7 @@ if __name__ == '__main__':
     user_description_models = []
     post_models = []
     post_content_models = []
-    for l in list_resp:
-        source = l['source']
+
 
     for l in list_resp:
         source = l['source']
@@ -100,20 +99,12 @@ if __name__ == '__main__':
                 )
             except Exception as e:
                 print(e)
-        #     try:
-        #         post_content_models.append(
-        #             PostContent.objects.create(
-        #                 id=l['id'],
-        #                 text=l['text']
-        #             )
-        #         )
-        #     except Exception as e:
-        #         print(e)
+
         else:
             try:
                 post_models.append(
                     Post.objects.create(
-                        id=l['id'],
+                        id=abs(int(l['id'])),
                         created_date=dateparser.parse(l['creation_time']),
                         owner_id=source['id'],
                         likes=l.get('socialInfo', {}).get('likesCount', 0),
@@ -122,3 +113,13 @@ if __name__ == '__main__':
                 )
             except Exception as e:
                 print(e)
+        try:
+            post_content_models.append(
+                PostContent.objects.create(
+                    id=abs(int(l['id'])),
+                    text=l['text'],
+                    url=l['share_link']
+                )
+            )
+        except Exception as e:
+            print(e)
