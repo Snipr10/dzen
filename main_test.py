@@ -65,8 +65,8 @@ if __name__ == '__main__':
                     url=source['feed_share_link']
                 )
             )
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
         try:
             user_description_models.append(
                 UserDescription.objects.create(
@@ -74,8 +74,9 @@ if __name__ == '__main__':
                     description=source['description'],
                 )
             )
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
+
         if "/b/" in l['share_link']:
             try:
                 post_models.append(
@@ -91,8 +92,8 @@ if __name__ == '__main__':
                         content_hash=get_md5(l['text'])
                     )
                 )
-            except Exception:
-                pass
+            except Exception as e:
+                print(e)
             try:
                 post_content_models.append(
                     PostContent.objects.create(
@@ -100,8 +101,8 @@ if __name__ == '__main__':
                         text=l['text']
                     )
                 )
-            except Exception:
-                pass
+            except Exception as e:
+                print(e)
         else:
             try:
                 post_models.append(
@@ -115,5 +116,5 @@ if __name__ == '__main__':
                         sphinx_id=get_sphinx_id(l['share_link'])
                     )
                 )
-            except Exception:
-                pass
+            except Exception as e:
+                print(e)
