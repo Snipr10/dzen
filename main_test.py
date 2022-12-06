@@ -66,6 +66,7 @@ if __name__ == '__main__':
             )
         except Exception as e:
             print(e)
+            print()
         try:
             user_description_models.append(
                 UserDescription.objects.create(
@@ -76,7 +77,7 @@ if __name__ == '__main__':
                 )
             )
         except Exception as e:
-            print(e)
+            print(f"{e}  {source['id']}")
         #
         # if "/b/" in l['share_link']:
         #     try:
