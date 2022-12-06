@@ -12,15 +12,16 @@ class User(AbstractUser):
 
 class DzenUser(models.Model):
     id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=255)
     screen_name = models.CharField(max_length=255)
+    avatar = models.CharField(max_length=255)
     followers = models.IntegerField(default=0)
     found_date = models.DateTimeField(default=now, blank=True, null=True)
-    sphinx_id = models.CharField(max_length=4096)
-    name = models.CharField(max_length=255)
-    avatar = models.CharField(max_length=255)
     last_modified = models.DateTimeField(default=now, blank=True, null=True)
-    # is_verified = models.BooleanField(default=0)
-    url = models.CharField(max_length=4096)
+    #
+    # sphinx_id = models.CharField(max_length=4096)
+    # # is_verified = models.BooleanField(default=0)
+    # url = models.CharField(max_length=4096)
 
     class Meta:
         db_table = 'prsr_parser_dzen_user'
