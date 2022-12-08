@@ -6,6 +6,7 @@ import datetime
 import time
 
 import dateparser
+from datetime import timedelta
 
 import requests
 from django.utils import timezone
@@ -83,7 +84,8 @@ if __name__ == '__main__':
 
             key_word = Keyword.objects.filter(network_id=11, enabled=1, taken=0,
                                               id__in=list(key_source.values_list('keyword_id', flat=True)),
-                                              last_modified__gte=datetime.date(1999, 1, 1),
+                                              last_modified__gte=update_time_timezone(timezone.now()) - timedelta(
+                                                    minutes=30),
                                               ).order_by('last_modified').first()
             print(f"key_word {key_word}")
 
@@ -196,7 +198,8 @@ if __name__ == '__main__':
 
                 update_only_time(key_word)
                 stop_source(key_word, attempt=0)
-
+            else:
+                time.sleep(15*60)
         except Exception as e:
             stop_source(key_word, attempt=0)
 
