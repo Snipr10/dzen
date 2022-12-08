@@ -134,6 +134,11 @@ def get_post_info(session, url):
 
         allNews = soup.find('div', {'itemprop': 'articleBody'})
         try:
+            try:
+                text = soup.find("h1").get_text() + "<br> \n"
+            except Exception:
+                pass
+
             for p in allNews.findAll("p"):
                 text += p.text + "<br> \n"
             for i in allNews.findAll("img", {"class": "article-image-item__image"}):
@@ -148,9 +153,13 @@ def get_post_info(session, url):
         try:
             soup = BeautifulSoup(res.text.encode("iso-8859-1").decode(), "html.parser")
             try:
-                text = soup.find("meta", {"name": "description"}).get("content")
+                text = soup.find("h1").get_text() + "<br> \n"
+            except Exception:
+                pass
+            try:
+                text += soup.find("meta", {"name": "description"}).get("content")
             except AttributeError:
-                text = ""
+                text += ""
             image = soup.find("meta", {"property": "og:image"}).get("content")
             if image:
                 images.add(image)
