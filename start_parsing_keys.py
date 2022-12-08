@@ -84,7 +84,7 @@ if __name__ == '__main__':
             print(update_time_timezone(timezone.localtime() - timedelta(minutes=30)))
             key_word = Keyword.objects.filter(network_id=11, enabled=1, taken=0,
                                               id__in=list(key_source.values_list('keyword_id', flat=True)),
-                                              last_modified__gte=update_time_timezone(timezone.localtime() - timedelta(
+                                              last_modified__lte=update_time_timezone(timezone.localtime() - timedelta(
                                                     minutes=30)),
                                               ).order_by('last_modified').first()
             print(f"key_word {key_word}")
