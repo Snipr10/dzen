@@ -68,136 +68,137 @@ if __name__ == '__main__':
     from core.models import DzenUser, UserDescription, Post, PostContent, Sources, KeywordSource, Keyword
     from django.db.models import Q
 
-    key_word = None
-    session = None
-    try:
+    while True:
+        key_word = None
+        session = None
+        try:
 
-        select_sources = Sources.objects.filter(
-            Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-            status=1)
-        print(f"select_sources {select_sources}")
+            select_sources = Sources.objects.filter(
+                Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                status=1)
+            print(f"select_sources {select_sources}")
 
-        key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
-        print(f"key_source {key_source}")
+            key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
+            print(f"key_source {key_source}")
 
-        key_word = Keyword.objects.filter(network_id=11, enabled=1, taken=0,
-                                          id__in=list(key_source.values_list('keyword_id', flat=True)),
-                                          last_modified__gte=datetime.date(1999, 1, 1),
-                                          ).order_by('last_modified').first()
-        print(f"key_word {key_word}")
+            key_word = Keyword.objects.filter(network_id=11, enabled=1, taken=0,
+                                              id__in=list(key_source.values_list('keyword_id', flat=True)),
+                                              last_modified__gte=datetime.date(1999, 1, 1),
+                                              ).order_by('last_modified').first()
+            print(f"key_word {key_word}")
 
-        if key_word:
-            key_word.taken = 1
-            key_word.save(update_fields=['taken'])
+            if key_word:
+                key_word.taken = 1
+                key_word.save(update_fields=['taken'])
 
-            list_resp = searchy_key(requests.session(), key_word.keyword)
-            user_models = []
-            user_description_models = []
-            post_models = []
-            post_content_models = []
+                list_resp = searchy_key(requests.session(), key_word.keyword)
+                user_models = []
+                user_description_models = []
+                post_models = []
+                post_content_models = []
 
-            for l in list_resp:
-                source = l['source']
-                try:
-                    user_models.append(
-                        DzenUser(
-                            id=abs(int(source['id'])),
-                            screen_name=source['publisher_id'],
-                            followers=source['subscribers'],
-                            name=source['title'],
-                            avatar=source['logo'],
-                        )
-                    )
-                except Exception as e:
-                    print(e)
-                try:
-                    user_description_models.append(
-                        UserDescription(
-                            id=abs(int(source['id'])),
-                            description=source.get('description', ""),
-                            url=source['feed_share_link']
-
-                        )
-                    )
-                except Exception as e:
-                    print(f"Error {e} {source['feed_share_link']} {source['id']}")
-
-                if "/b/" in l['share_link']:
+                for l in list_resp:
+                    source = l['source']
                     try:
-                        post_models.append(
-                            Post(
-                                id=abs(int(l['id'])),
-                                created_date=dateparser.parse(l['creation_time']),
-                                owner_id=abs(int(source['id'])),
-                                # last_modified=update_time_timezone(timezone.localtime()),
-                                likes=l.get('socialInfo', {}).get('likesCount', 0),
-                                comments=l.get('socialInfo', {}).get('commentCount', 0),
-                                # content_hash=get_md5(l['text'])
+                        user_models.append(
+                            DzenUser(
+                                id=abs(int(source['id'])),
+                                screen_name=source['publisher_id'],
+                                followers=source['subscribers'],
+                                name=source['title'],
+                                avatar=source['logo'],
                             )
                         )
                     except Exception as e:
                         print(e)
-
-                else:
                     try:
-                        post_models.append(
-                            Post(
+                        user_description_models.append(
+                            UserDescription(
+                                id=abs(int(source['id'])),
+                                description=source.get('description', ""),
+                                url=source['feed_share_link']
+
+                            )
+                        )
+                    except Exception as e:
+                        print(f"Error {e} {source['feed_share_link']} {source['id']}")
+
+                    if "/b/" in l['share_link']:
+                        try:
+                            post_models.append(
+                                Post(
+                                    id=abs(int(l['id'])),
+                                    created_date=dateparser.parse(l['creation_time']),
+                                    owner_id=abs(int(source['id'])),
+                                    # last_modified=update_time_timezone(timezone.localtime()),
+                                    likes=l.get('socialInfo', {}).get('likesCount', 0),
+                                    comments=l.get('socialInfo', {}).get('commentCount', 0),
+                                    # content_hash=get_md5(l['text'])
+                                )
+                            )
+                        except Exception as e:
+                            print(e)
+
+                    else:
+                        try:
+                            post_models.append(
+                                Post(
+                                    id=abs(int(l['id'])),
+                                    created_date=dateparser.parse(l['creation_time']),
+                                    owner_id=abs(int(source['id'])),
+                                    likes=l.get('socialInfo', {}).get('likesCount', 0),
+                                    comments=l.get('socialInfo', {}).get('commentCount', 0),
+                                )
+                            )
+                        except Exception as e:
+                            print(e)
+                    try:
+                        post_content_models.append(
+                            PostContent.objects.create(
                                 id=abs(int(l['id'])),
-                                created_date=dateparser.parse(l['creation_time']),
-                                owner_id=abs(int(source['id'])),
-                                likes=l.get('socialInfo', {}).get('likesCount', 0),
-                                comments=l.get('socialInfo', {}).get('commentCount', 0),
+                                content=l['text'],
+                                url=l['share_link']
                             )
                         )
                     except Exception as e:
                         print(e)
                 try:
-                    post_content_models.append(
-                        PostContent.objects.create(
-                            id=abs(int(l['id'])),
-                            content=l['text'],
-                            url=l['share_link']
-                        )
-                    )
+                    DzenUser.objects.bulk_update(user_models, ['followers', 'last_modified'], batch_size=200)
                 except Exception as e:
-                    print(e)
-            try:
-                DzenUser.objects.bulk_update(user_models, ['followers', 'last_modified'], batch_size=200)
-            except Exception as e:
-                print(f"DzenUser: {e}")
+                    print(f"DzenUser: {e}")
 
-            try:
-                DzenUser.objects.bulk_create(user_models, batch_size=200, ignore_conflicts=True)
-            except Exception as e:
-                print(f"DzenUser: {e}")
+                try:
+                    DzenUser.objects.bulk_create(user_models, batch_size=200, ignore_conflicts=True)
+                except Exception as e:
+                    print(f"DzenUser: {e}")
 
-            try:
-                UserDescription.objects.bulk_update(user_description_models, ['description'], batch_size=200)
-            except Exception as e:
-                print(f"DzenUser: {e}")
-            try:
-                UserDescription.objects.bulk_create(user_description_models, batch_size=200, ignore_conflicts=True)
-            except Exception as e:
-                print(f"UserDescription: {e}")
+                try:
+                    UserDescription.objects.bulk_update(user_description_models, ['description'], batch_size=200)
+                except Exception as e:
+                    print(f"DzenUser: {e}")
+                try:
+                    UserDescription.objects.bulk_create(user_description_models, batch_size=200, ignore_conflicts=True)
+                except Exception as e:
+                    print(f"UserDescription: {e}")
 
-            try:
-                Post.objects.bulk_update(post_models, ['likes', 'comments'], batch_size=200)
-            except Exception as e:
-                print(f"Post: {e}")
-            try:
-                Post.objects.bulk_create(post_models, batch_size=200, ignore_conflicts=True)
-            except Exception as e:
-                print(f"Post: {e}")
-            try:
-                PostContent.objects.bulk_create(post_content_models, batch_size=200, ignore_conflicts=True)
-            except Exception as e:
-                print(f"PostContent: {e}")
+                try:
+                    Post.objects.bulk_update(post_models, ['likes', 'comments'], batch_size=200)
+                except Exception as e:
+                    print(f"Post: {e}")
+                try:
+                    Post.objects.bulk_create(post_models, batch_size=200, ignore_conflicts=True)
+                except Exception as e:
+                    print(f"Post: {e}")
+                try:
+                    PostContent.objects.bulk_create(post_content_models, batch_size=200, ignore_conflicts=True)
+                except Exception as e:
+                    print(f"PostContent: {e}")
 
-            update_only_time(key_word)
+                update_only_time(key_word)
+                stop_source(key_word, attempt=0)
+
+        except Exception as e:
             stop_source(key_word, attempt=0)
-
-    except Exception as e:
-        stop_source(key_word, attempt=0)
 
 
 
