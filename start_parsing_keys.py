@@ -164,6 +164,7 @@ if __name__ == '__main__':
                         )
                     except Exception as e:
                         print(e)
+                django.db.close_old_connections()
                 try:
                     DzenUser.objects.bulk_update(user_models, ['followers', 'last_modified'], batch_size=200)
                 except Exception as e:
@@ -201,6 +202,7 @@ if __name__ == '__main__':
             else:
                 time.sleep(15*60)
         except Exception as e:
+            django.db.close_old_connections()
             stop_source(key_word, attempt=0)
 
 

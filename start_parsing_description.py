@@ -56,6 +56,9 @@ if __name__ == '__main__':
             post_content_models.append(PostContent(id=p.id, content=res.get('text')))
         except Exception as e:
             print(e)
+
+    django.db.close_old_connections()
+
     try:
         Post.objects.bulk_update(post_models, ['content_hash', 'last_modified'], batch_size=200)
     except Exception as e:
