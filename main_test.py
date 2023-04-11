@@ -44,7 +44,8 @@ if __name__ == '__main__':
     from main import searchy_key
     from core.models import DzenUser, UserDescription, Post, PostContent
 
-    list_resp = searchy_key(requests.session(), "auto")
+    # list_resp = searchy_key(requests.session(), "auto")
+    list_resp = searchy_key(requests.session(), "россия")
     user_models = []
     user_description_models = []
     post_models = []
