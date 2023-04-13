@@ -107,6 +107,7 @@ if __name__ == '__main__':
                     print(3)
 
                     list_resp = searchy_id(requests.session(), sources_item.data)
+                    print(f"list_resp {list_resp}")
                     user_models = []
                     user_description_models = []
                     post_models = []
