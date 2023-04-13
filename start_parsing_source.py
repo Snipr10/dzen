@@ -91,6 +91,8 @@ if __name__ == '__main__':
             sources_item = SourcesItems.objects.filter(network_id=11, disabled=0, taken=0,
                                                        source_id__in=list(select_sources.values_list('id', flat=True))) \
                 .order_by('last_modified').first()
+            print(f"sources_item {sources_item}")
+
             if sources_item is not None:
                 time_s = select_sources.get(id=sources_item.source_id).sources
                 if time_s is None:
