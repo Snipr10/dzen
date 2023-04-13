@@ -105,7 +105,7 @@ def searchy_id(session, id):
             if link and link not in set_res_urls:
                 set_res_urls.add(link)
                 list_resp.append(r)
-    print(1)
+    return list_resp
 
 
 def get_post_info(session, url):
