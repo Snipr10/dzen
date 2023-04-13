@@ -3,6 +3,7 @@
 import hashlib
 import os
 import datetime
+import time
 
 import dateparser
 
@@ -47,24 +48,26 @@ if __name__ == '__main__':
 
     post_models = []
     post_content_models = []
-    for p in Post.objects.filter(last_modified__lte=datetime.date(2000, 1, 1)):
+    while True:
+        for p in Post.objects.filter(last_modified__lte=datetime.date(2000, 1, 1)):
+            try:
+                print(p)
+                res = get_post_info(requests.session(), PostContent.objects.get(id=p.id).url)
+                p.content_hash = get_md5(res.get('text'))
+                p.last_modified = timezone.now()
+                post_models.append(p)
+                post_content_models.append(PostContent(id=p.id, content=res.get('text')))
+            except Exception as e:
+                print(e)
+
+        django.db.close_old_connections()
+
         try:
-            print(p)
-            res = get_post_info(requests.session(), PostContent.objects.get(id=p.id).url)
-            p.content_hash = get_md5(res.get('text'))
-            p.last_modified = timezone.now()
-            post_models.append(p)
-            post_content_models.append(PostContent(id=p.id, content=res.get('text')))
+            Post.objects.bulk_update(post_models, ['content_hash', 'last_modified'], batch_size=200)
         except Exception as e:
-            print(e)
-
-    django.db.close_old_connections()
-
-    try:
-        Post.objects.bulk_update(post_models, ['content_hash', 'last_modified'], batch_size=200)
-    except Exception as e:
-        print(f"Post: {e}")
-    try:
-        PostContent.objects.bulk_update(post_content_models, ['content'], batch_size=200)
-    except Exception as e:
-        print(f"Post: {e}")
+            print(f"Post: {e}")
+        try:
+            PostContent.objects.bulk_update(post_content_models, ['content'], batch_size=200)
+        except Exception as e:
+            print(f"Post: {e}")
+        time.sleep(15*60)
