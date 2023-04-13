@@ -214,8 +214,8 @@ if __name__ == '__main__':
                     sources_item.last_modified = update_time_timezone(timezone.localtime())
                     sources_item.taken = 0
                     sources_item.save(update_fields=['taken', 'last_modified'])
-                else:
-                    time.sleep(15 * 60)
+            else:
+                time.sleep(15 * 60)
         except Exception as e:
             django.db.close_old_connections()
             stop_source(sources_item, attempt=0)
