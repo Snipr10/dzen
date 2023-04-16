@@ -66,11 +66,13 @@ if __name__ == '__main__':
             try:
                 Post.objects.bulk_update(post_models, ['content_hash', 'last_modified'], batch_size=200)
             except Exception as e:
+                django.db.close_old_connections()
                 print(f"Post: {e}")
             try:
                 PostContent.objects.bulk_update(post_content_models, ['content'], batch_size=200)
             except Exception as e:
-                print(f"Post: {e}")
+                django.db.close_old_connections()
+                print(f"PostContent: {e}")
             time.sleep(3*60)
         except Exception as e:
             time.sleep(15*60)
