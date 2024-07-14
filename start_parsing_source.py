@@ -117,6 +117,7 @@ if __name__ == '__main__':
                     user_description_models = []
                     post_models = []
                     post_content_models = []
+                    print(4)
 
                     for l in list_resp:
                         source = l['source']
@@ -224,5 +225,6 @@ if __name__ == '__main__':
             else:
                 time.sleep(15 * 60)
         except Exception as e:
+            print(e)
             django.db.close_old_connections()
             stop_source(sources_item, attempt=0)
