@@ -94,12 +94,14 @@ if __name__ == '__main__':
                 key_word.save(update_fields=['taken'])
 
                 list_resp = searchy_key(requests.session(), key_word.keyword)
+                print(list_resp)
                 user_models = []
                 user_description_models = []
                 post_models = []
                 post_content_models = []
 
                 for l in list_resp:
+                    print(l)
                     source = l['source']
                     try:
                         user_models.append(
@@ -200,8 +202,10 @@ if __name__ == '__main__':
                 update_only_time(key_word)
                 stop_source(key_word, attempt=0)
             else:
+                print("sleep")
                 time.sleep(15*60)
         except Exception as e:
+            print(e)
             django.db.close_old_connections()
             stop_source(key_word, attempt=0)
 
