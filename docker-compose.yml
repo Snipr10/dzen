@@ -1,10 +1,10 @@
 version: '3.4'
 
 services:
-  description:
-    build: ./
-    command: python3 start_parsing_description.py
-    restart: on-failure
+#  description:
+#    build: ./
+#    command: python3 start_parsing_description.py
+#    restart: on-failure
 
   key:
     build: ./
