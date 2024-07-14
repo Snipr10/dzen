@@ -82,15 +82,21 @@ if __name__ == '__main__':
     from django.db.models import Q
     from dzen.parsing_key import searchy_id
 
+    print("1")
+
     sources_item = None
     while True:
         try:
             select_sources = Sources.objects.filter(
                 Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                 status=1)
+            print("2")
+
             sources_item = SourcesItems.objects.filter(network_id=11, disabled=0, taken=0,
                                                        source_id__in=list(select_sources.values_list('id', flat=True))) \
                 .order_by('last_modified').first()
+            print("3")
+
             print(f"sources_item {sources_item}")
 
             if sources_item is not None:
