@@ -79,7 +79,7 @@ class Sources(models.Model):
     # last_modify = models.DateTimeField(null=True, blank=True)
     # links_modify = models.DateTimeField(null=True, blank=True)
     # n2_modify = models.DateTimeField(null=True, blank=True)
-    # taken = models.BooleanField(default=1)
+    taken = models.BooleanField(default=1)
     linking = models.BooleanField(default=0)
     sources = models.IntegerField(default=15)
     profiles = models.IntegerField(default=15)
