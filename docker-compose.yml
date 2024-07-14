@@ -6,12 +6,12 @@ services:
 #    command: python3 start_parsing_description.py
 #    restart: on-failure
 
-  key:
-    build: ./
-    command: python3 start_parsing_keys.py
-    restart: on-failure
-
-#  source:
+#  key:
 #    build: ./
-#    command: python3 start_parsing_source.py
+#    command: python3 start_parsing_keys.py
 #    restart: on-failure
+
+  source:
+    build: ./
+    command: python3 start_parsing_source.py
+    restart: on-failure
