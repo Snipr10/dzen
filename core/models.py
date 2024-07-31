@@ -55,6 +55,7 @@ class PostContent(models.Model):
     id = models.IntegerField(primary_key=True)
     content = models.CharField(max_length=10000)
     url = models.CharField(max_length=4096)
+    title = models.CharField(max_length=255, default='')
 
     class Meta:
         db_table = 'prsr_parser_dzen_post_content'

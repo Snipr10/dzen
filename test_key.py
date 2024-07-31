@@ -109,7 +109,8 @@ if __name__ == '__main__':
                 PostContent.objects.create(
                     id=abs(int(l['id'])),
                     content=l['text'],
-                    url=l['share_link']
+                    url=l['share_link'],
+                    title=l.get("title", "")
                 )
             )
         except Exception as e:
