@@ -14,6 +14,7 @@ class DzenUser(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     screen_name = models.CharField(max_length=255)
+    dzen_id = models.CharField(max_length=255)
     avatar = models.CharField(max_length=255)
     followers = models.IntegerField(default=0)
     found_date = models.DateTimeField(default=now, blank=True, null=True)

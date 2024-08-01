@@ -62,7 +62,8 @@ if __name__ == '__main__':
             user_models.append(
                 DzenUser.objects.create(
                     id=abs(int(source['id'])),
-                    screen_name=source['publisher_id'],
+                    dzen_id=source['publisher_id'],
+                    screen_name=source['url'],
                     followers=source['subscribers'],
                     # sphinx_id=get_sphinx_id(source['feed_share_link']),
                     name=source['title'],

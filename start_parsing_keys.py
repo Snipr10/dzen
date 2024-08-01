@@ -169,7 +169,7 @@ if __name__ == '__main__':
                         print(e)
                 django.db.close_old_connections()
                 try:
-                    DzenUser.objects.bulk_update(user_models, ['followers', 'last_modified'], batch_size=200)
+                    DzenUser.objects.bulk_update(user_models, ['followers', 'last_modified', 'screen_name'], batch_size=200)
                 except Exception as e:
                     print(f"DzenUser: {e}")
 
