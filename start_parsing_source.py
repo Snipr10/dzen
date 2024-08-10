@@ -167,8 +167,12 @@ if __name__ == '__main__':
                     print(3)
 
                     session = requests.session()
+                    print(sources_item.data)
                     user_data = get_user_info(session, sources_item.data)
+                    print(4)
                     user_source = list(user_data['feed']['items'].values())[0]['items'][0]['source']
+                    print(5)
+
                     dzen_id = user_source['publisherId']
                     screen_name = f"id/{dzen_id}"
                     if screen_name not in user_source['shareLink']:
