@@ -165,6 +165,7 @@ if __name__ == '__main__':
                     sources_item.taken = 1
                     sources_item.save()
                     print(3)
+                    print(sources_item.data)
 
                     session = requests.session()
                     print(sources_item.data)
