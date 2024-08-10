@@ -4,10 +4,12 @@ import hashlib
 import os
 import datetime
 import time
+from json import JSONDecoder
 
 import dateparser
 from datetime import timedelta
 
+import regex
 import requests
 from django.utils import timezone
 
@@ -25,6 +27,58 @@ def get_sphinx_id(url):
 def update_time_timezone(my_time):
     return my_time + datetime.timedelta(hours=3)
 
+
+def extract_json_objects(text, decoder=JSONDecoder()):
+    """Find JSON objects in text, and yield the decoded JSON data
+
+    Does not attempt to look for JSON arrays, text, or other JSON types outside
+    of a parent JSON object.
+
+    """
+    pos = 0
+    while True:
+        match = text.find('{', pos)
+        if match == -1:
+            break
+        try:
+            result, index = decoder.raw_decode(text[match:])
+            yield result
+            pos = match + index
+        except ValueError:
+            pos = match + 1
+
+
+def get_user_info(session, username):
+    url = f"https://dzen.ru/{username}"
+    headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Accept-Language': 'ru-RU,ru;q=0.9',
+        'Connection': 'keep-alive',
+        'DNT': '1',
+        'Referer': 'https://sso.dzen.ru/',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-site',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Mobile Safari/537.36',
+        'sec-ch-ua': '"Not?A_Brand";v="8", "Chromium";v="108", "Google Chrome";v="108"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'Cookie': 'zen_sso_checked=1; Session_id=noauth:;sso_checked=1;'
+    }
+
+    response = session.get(url, headers=headers)
+
+    pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}')
+    res = None
+    for res_pattern in [p for p in pattern.findall(response.text) if "publisher_oid" in p]:
+        for result in extract_json_objects(res_pattern):
+            if "publisher_oid" in str(result):
+                res = result
+                break
+        if res:
+            break
+    return list(res.get("data").values())[0]
 
 def stop_source(sources_item, attempt=0):
     try:
@@ -112,7 +166,14 @@ if __name__ == '__main__':
                     sources_item.save()
                     print(3)
 
-                    list_resp = searchy_id(requests.session(), sources_item.data)
+                    session = requests.session()
+                    user_data = get_user_info(session, sources_item.data)
+                    user_source = list(user_data['feed']['items'].values())[0]['items'][0]['source']
+                    dzen_id = user_source['publisherId']
+                    screen_name = f"id/{dzen_id}"
+                    if screen_name not in user_source['shareLink']:
+                        screen_name = user_source['shareLink'].split("/")[-1]
+                    list_resp = searchy_id(session, dzen_id)
                     user_models = []
                     user_description_models = []
                     post_models = []
@@ -124,12 +185,12 @@ if __name__ == '__main__':
                         try:
                             user_models.append(
                                 DzenUser(
-                                    id=abs(int(source['id'])),
-                                    dzen_id=source['publisher_id'],
-                                    screen_name=source['url'],
-                                    followers=source['subscribers'],
+                                    id=abs(int(source['itemId'])),
+                                    dzen_id=source['id'],
+                                    screen_name=screen_name,
+                                    followers=user_source['subscribers'],
                                     name=source['title'],
-                                    avatar=source['logo'],
+                                    avatar=source['image']['logo']
                                 )
                             )
                         except Exception as e:
@@ -137,14 +198,14 @@ if __name__ == '__main__':
                         try:
                             user_description_models.append(
                                 UserDescription(
-                                    id=abs(int(source['id'])),
+                                    id=abs(int(source['itemId'])),
                                     description=source.get('description', ""),
-                                    url=source['feed_share_link']
+                                    url=l['source']['shareLink']
 
                                 )
                             )
                         except Exception as e:
-                            print(f"Error {e} {source['feed_share_link']} {source['id']}")
+                            print(f"Error {e} {source}")
 
                         if "/b/" in l['share_link']:
                             try:
@@ -160,7 +221,20 @@ if __name__ == '__main__':
                                     )
                                 )
                             except Exception as e:
-                                print(e)
+                                try:
+                                    post_models.append(
+                                        Post(
+                                            id=abs(int(l['itemId'])),
+                                            created_date=dateparser.parse(l['publicationDate']),
+                                            owner_id=abs(int(source['itemId'])),
+                                            # last_modified=update_time_timezone(timezone.localtime()),
+                                            likes=l.get('socialInfo', {}).get('likesCount', 0),
+                                            comments=l.get('socialInfo', {}).get('commentCount', 0),
+                                            # content_hash=get_md5(l['text'])
+                                        )
+                                    )
+                                except Exception:
+                                    print(e)
 
                         else:
                             try:
@@ -175,13 +249,26 @@ if __name__ == '__main__':
                                     )
                                 )
                             except Exception as e:
-                                print(e)
+                                try:
+                                    post_models.append(
+                                        Post(
+                                            id=abs(int(l['itemId'])),
+                                            created_date=dateparser.parse(l['publicationDate']),
+                                            owner_id=abs(int(source['itemId'])),
+                                            # last_modified=update_time_timezone(timezone.localtime()),
+                                            likes=l.get('socialInfo', {}).get('likesCount', 0),
+                                            comments=l.get('socialInfo', {}).get('commentCount', 0),
+                                            # content_hash=get_md5(l['text'])
+                                        )
+                                    )
+                                except Exception as e:
+                                    print(e)
                         try:
                             post_content_models.append(
-                                PostContent.objects.create(
-                                    id=abs(int(l['id'])),
+                                PostContent(
+                                    id=abs(int(l['itemId'])),
                                     content=l['text'],
-                                    url=l['share_link'],
+                                    url=l['shareLink'],
                                     title=l.get("title", "")
                                 )
                             )

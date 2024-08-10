@@ -1,4 +1,7 @@
 import json
+from json import JSONDecoder
+
+import regex
 from bs4 import BeautifulSoup
 
 
@@ -57,32 +60,20 @@ def searchy_key(session, key):
 
 def get_by_id(session, id, url=None):
     headers = {
-        'Accept': 'application/json',
-        'Accept-Language': 'ru-RU,ru;q=0.9',
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0',
+        'Accept': '*/*',
+        'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3',
         'Connection': 'keep-alive',
-        'Content-Type': 'application/json',
-
-        'DNT': '1',
-        'Origin': 'https://dzen.ru',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',
-
-        'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Linux"'
+        'Sec-Fetch-Site': 'same-origin'
     }
 
     if url is None:
-        url = f"https://dzen.ru/api/v3/launcher/more?country_code=ru&clid=1400&lang=ru&channel_id={id}"
-        response = session.get(url, headers=headers)
-    else:
+        url = f"https://dzen.ru/api/web/v1/more?sort_type=regular&country_code=ru&tab=longs&clid=1400&lang=ru&channel_id={id}"
 
-        payload = json.dumps({
-            "stats": []
-        })
-        response = session.post(url, headers=headers, data=payload)
+    response = session.get(url, headers=headers)
+
     res = response.json()
     return response.json().get("items"), (res.get("more", {}).get('link', None) or None)
 
