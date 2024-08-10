@@ -180,8 +180,11 @@ if __name__ == '__main__':
 
                     dzen_id = user_source['publisherId']
                     screen_name = f"id/{dzen_id}"
-                    if screen_name not in user_source['shareLink']:
-                        screen_name = user_source['shareLink'].split("/")[-1]
+                    try:
+                        if screen_name not in user_source['shareLink']:
+                            screen_name = user_source['shareLink'].split("/")[-1]
+                    except Exception:
+                        pass
                     list_resp = searchy_id(session, dzen_id)
                     user_models = []
                     user_description_models = []
