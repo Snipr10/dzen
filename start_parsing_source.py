@@ -165,8 +165,10 @@ if __name__ == '__main__':
                     sources_item.taken = 1
                     sources_item.save()
                     print(3)
-                    print(sources_item.data)
-
+                    try:
+                        print(sources_item.data)
+                    except Exception as e:
+                        print(e)
                     session = requests.session()
                     print(sources_item.data)
                     user_data = get_user_info(session, sources_item.data)
