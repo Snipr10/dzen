@@ -170,7 +170,12 @@ if __name__ == '__main__':
                     print(sources_item.data)
                     user_data = get_user_info(session, sources_item.data)
                     print(4)
-                    user_source = list(user_data['feed']['items'].values())[0]['items'][0]['source']
+                    for item in list(user_data['feed']['items'].values()):
+                        try:
+                            user_source = item['items'][0]['source']
+                            break
+                        except Exception as e:
+                            pass
                     print(5)
 
                     dzen_id = user_source['publisherId']
