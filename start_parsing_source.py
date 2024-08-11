@@ -193,7 +193,7 @@ if __name__ == '__main__':
                     user_description_models = []
                     post_models = []
                     post_content_models = []
-                    print(4)
+                    print(8)
 
                     for l in list_resp:
                         source = l['source']
@@ -209,7 +209,7 @@ if __name__ == '__main__':
                                 )
                             )
                         except Exception as e:
-                            print(e)
+                            print(f"DzenUser {e}")
                         try:
                             user_description_models.append(
                                 UserDescription(
@@ -220,9 +220,9 @@ if __name__ == '__main__':
                                 )
                             )
                         except Exception as e:
-                            print(f"Error {e} {source}")
+                            print(f"UserDescription {e}")
 
-                        if "/b/" in l.get('share_link'):
+                        if l.get('share_link') and "/b/" in l.get('share_link'):
                             try:
                                 post_models.append(
                                     Post(
@@ -248,8 +248,8 @@ if __name__ == '__main__':
                                             # content_hash=get_md5(l['text'])
                                         )
                                     )
-                                except Exception:
-                                    print(e)
+                                except Exception as e:
+                                    print(f"Post {e}")
 
                         else:
                             try:
@@ -277,7 +277,7 @@ if __name__ == '__main__':
                                         )
                                     )
                                 except Exception as e:
-                                    print(e)
+                                    print(f"Post {e}")
                         try:
                             post_content_models.append(
                                 PostContent(
@@ -288,7 +288,7 @@ if __name__ == '__main__':
                                 )
                             )
                         except Exception as e:
-                            print(e)
+                            print(f"PostContent {e}")
                     django.db.close_old_connections()
                     try:
                         DzenUser.objects.bulk_update(user_models, ['followers', 'last_modified', 'screen_name'], batch_size=200)
