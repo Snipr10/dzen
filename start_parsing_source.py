@@ -222,7 +222,7 @@ if __name__ == '__main__':
                         except Exception as e:
                             print(f"Error {e} {source}")
 
-                        if "/b/" in l['share_link']:
+                        if "/b/" in l.get('share_link'):
                             try:
                                 post_models.append(
                                     Post(
