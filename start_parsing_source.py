@@ -157,14 +157,14 @@ if __name__ == '__main__':
                 time_s = select_sources.get(id=sources_item.source_id).sources
                 if time_s is None:
                     time_s = 0
-                print(2)
+                print(4)
 
                 if sources_item.last_modified is None or (
                         sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                         update_time_timezone(timezone.localtime())):
                     sources_item.taken = 1
                     sources_item.save()
-                    print(3)
+                    print(5)
                     try:
                         print(sources_item.data)
                     except Exception as e:
