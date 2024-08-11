@@ -58,7 +58,7 @@ def searchy_key(session, key):
     return list_resp
 
 
-def get_by_id(session, id, url=None):
+def get_by_id(session, id, url=None, is_id=True):
     headers = {
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0',
         'Accept': '*/*',
@@ -70,7 +70,10 @@ def get_by_id(session, id, url=None):
     }
 
     if url is None:
-        url = f"https://dzen.ru/api/web/v1/more?sort_type=regular&country_code=ru&tab=longs&clid=1400&lang=ru&channel_id={id}"
+        if is_id:
+            url = f"https://dzen.ru/api/web/v1/more?sort_type=regular&country_code=ru&tab=longs&clid=1400&lang=ru&channel_id={id}"
+        else:
+            url = f"https://dzen.ru/api/web/v1/more?sort_type=regular&country_code=ru&tab=longs&clid=1400&lang=ru&channel_name={id}"
 
     response = session.get(url, headers=headers)
 
@@ -78,13 +81,13 @@ def get_by_id(session, id, url=None):
     return response.json().get("items"), (res.get("more", {}).get('link', None) or None)
 
 
-def searchy_id(session, id):
+def searchy_id(session, id, is_id=False):
     page = 0
     list_resp = []
     set_res_urls = set()
     next_link = None
     while True:
-        res, next_link = get_by_id(session, id, next_link)
+        res, next_link = get_by_id(session, id, next_link, is_id=is_id)
         if len(res) <= 1:
             break
         page += 1

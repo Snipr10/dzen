@@ -158,8 +158,13 @@ if __name__ == '__main__':
                 if time_s is None:
                     time_s = 0
                 print(4)
-                print(sources_item.last_modified + datetime.timedelta(minutes=time_s))
-                print(update_time_timezone(timezone.localtime()))
+
+                try:
+                    print(update_time_timezone(timezone.localtime())-sources_item.last_modified + datetime.timedelta(minutes=time_s))
+                    time.sleep(update_time_timezone(timezone.localtime())-sources_item.last_modified + datetime.timedelta(minutes=time_s))
+                except:
+                    pass
+
                 if sources_item.last_modified is None or (
                         sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                         update_time_timezone(timezone.localtime())):
@@ -184,12 +189,17 @@ if __name__ == '__main__':
 
                     dzen_id = user_source['publisherId']
                     screen_name = f"id/{dzen_id}"
+                    is_id = True
                     try:
                         if screen_name not in user_source['shareLink']:
                             screen_name = user_source['shareLink'].split("/")[-1]
+                            is_id = False
                     except Exception:
                         pass
-                    list_resp = searchy_id(session, dzen_id)
+                    if is_id:
+                        list_resp = searchy_id(session, dzen_id, is_id)
+                    else:
+                        list_resp = searchy_id(session, screen_name, is_id)
                     user_models = []
                     user_description_models = []
                     post_models = []
