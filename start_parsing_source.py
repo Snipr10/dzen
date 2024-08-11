@@ -158,7 +158,8 @@ if __name__ == '__main__':
                 if time_s is None:
                     time_s = 0
                 print(4)
-
+                print(sources_item.last_modified + datetime.timedelta(minutes=time_s))
+                print(update_time_timezone(timezone.localtime()))
                 if sources_item.last_modified is None or (
                         sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                         update_time_timezone(timezone.localtime())):
