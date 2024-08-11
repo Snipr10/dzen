@@ -196,6 +196,7 @@ if __name__ == '__main__':
                     print(8)
 
                     for l in list_resp:
+                        print(list_resp)
                         source = l['source']
                         try:
                             user_models.append(
