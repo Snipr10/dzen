@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
                 try:
                     print(update_time_timezone(timezone.localtime())-sources_item.last_modified + datetime.timedelta(minutes=time_s))
-                    time.sleep(update_time_timezone(timezone.localtime())-sources_item.last_modified + datetime.timedelta(minutes=time_s))
+                    time.sleep((update_time_timezone(timezone.localtime())-sources_item.last_modified + datetime.timedelta(minutes=time_s)).second)
                 except:
                     pass
 
