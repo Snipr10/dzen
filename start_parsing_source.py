@@ -172,14 +172,14 @@ if __name__ == '__main__':
                     session = requests.session()
                     print(sources_item.data)
                     user_data = get_user_info(session, sources_item.data)
-                    print(4)
+                    print(6)
                     for item in list(user_data['feed']['items'].values()):
                         try:
                             user_source = item['items'][0]['source']
                             break
                         except Exception as e:
                             pass
-                    print(5)
+                    print(7)
 
                     dzen_id = user_source['publisherId']
                     screen_name = f"id/{dzen_id}"
