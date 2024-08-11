@@ -161,9 +161,9 @@ if __name__ == '__main__':
 
                 try:
                     print(update_time_timezone(timezone.localtime())-sources_item.last_modified + datetime.timedelta(minutes=time_s))
-                    time.sleep((update_time_timezone(timezone.localtime())-sources_item.last_modified + datetime.timedelta(minutes=time_s)).second)
-                except:
-                    pass
+                    time.sleep(sources_item.last_modified + datetime.timedelta(minutes=time_s)- (update_time_timezone(timezone.localtime())).second)
+                except Exception as e:
+                    print(f"time.sleep {e}")
 
                 if sources_item.last_modified is None or (
                         sources_item.last_modified + datetime.timedelta(minutes=time_s) <
