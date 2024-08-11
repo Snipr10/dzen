@@ -162,8 +162,9 @@ if __name__ == '__main__':
                 try:
                     print(update_time_timezone(timezone.localtime()) - sources_item.last_modified + datetime.timedelta(
                         minutes=time_s))
-                    time.sleep((sources_item.last_modified + datetime.timedelta(minutes=time_s)).second - (
-                        update_time_timezone(timezone.localtime())).second)
+                    time.sleep((
+                                   update_time_timezone(timezone.localtime())).second - (
+                                           sources_item.last_modified + datetime.timedelta(minutes=time_s)).second)
                 except Exception as e:
                     print(f"time.sleep {e}")
 
