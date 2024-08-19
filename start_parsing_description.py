@@ -49,6 +49,8 @@ if __name__ == '__main__':
     post_models = []
     post_content_models = []
     while True:
+        time.sleep(5 * 60)
+
         try:
             for p in Post.objects.filter(last_modified__lte=datetime.date(2000, 1, 1)):
                 try:

@@ -140,6 +140,8 @@ if __name__ == '__main__':
 
     sources_item = None
     while True:
+        time.sleep(5 * 60)
+
         try:
             select_sources = Sources.objects.filter(
                 Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,

@@ -72,6 +72,8 @@ if __name__ == '__main__':
     while True:
         key_word = None
         session = None
+        time.sleep(5 * 60)
+
         try:
 
             select_sources = Sources.objects.filter(
