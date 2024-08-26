@@ -5,13 +5,39 @@ services:
     build: ./
     command: python3 start_parsing_description.py
     restart: on-failure
+    deploy:
+      resources:
+        limits:
+          memory: 1GB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+
 
   key:
     build: ./
     command: python3 start_parsing_keys.py
     restart: on-failure
+    deploy:
+      resources:
+        limits:
+          memory: 1GB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+
   source:
     build: ./
     command: python3 start_parsing_source.py
     restart: on-failure
+    deploy:
+      resources:
+        limits:
+          memory: 1GB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
 
