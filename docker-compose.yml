@@ -1,6 +1,11 @@
 version: '3.4'
 
 services:
+  restarter:
+    image: docker
+    volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
+    command: [ "/bin/sh", "-c", "while true; do sleep 7200; docker restart dzen_description_1; docker restart dzen_source_1; docker restart dzen_key_1; done" ]
+
   description:
     build: ./
     command: python3 start_parsing_description.py
